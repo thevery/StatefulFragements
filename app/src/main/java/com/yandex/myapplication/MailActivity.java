@@ -27,7 +27,7 @@ public class MailActivity extends AppCompatActivity
 
             transaction.add(R.id.container_1, new MainListFragment(), TAG1);
             if (twoPane) {
-                transaction.add(R.id.container_2, new ItemDetailFragment(), TAG2);
+                transaction.add(R.id.container_2, new MainDetailFragment(), TAG2);
             }
 
             transaction.commit();
@@ -38,7 +38,7 @@ public class MailActivity extends AppCompatActivity
     public void onItemSelected(String id) {
         Toast.makeText(this, "MailActivity.onItemSelected: " + id, Toast.LENGTH_SHORT).show();
 
-        final ItemDetailFragment fragment = (ItemDetailFragment) getSupportFragmentManager().findFragmentByTag(TAG2);
+        final MainDetailFragment fragment = (MainDetailFragment) getSupportFragmentManager().findFragmentByTag(TAG2);
         fragment.setText("set from activity: " + id);
     }
 

@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.yandex.myapplication.dummy.DummyContent;
-
 
 public class MainAccountFragment extends Fragment {
     private Callbacks mCallbacks;
