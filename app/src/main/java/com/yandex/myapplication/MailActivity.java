@@ -30,7 +30,7 @@ public class MailActivity extends AppCompatActivity
 
             final MainDetailFragment detailFragment = new MainDetailFragment();
             transaction.add(R.id.container_2, detailFragment, TAG_DETAIL);
-            transaction.hide(detailFragment);
+            detailFragment.setExplicitHidden(transaction, true);
 
             transaction.commit();
         } else {
@@ -49,10 +49,9 @@ public class MailActivity extends AppCompatActivity
         MainListFragment masterFragment = getMasterFragment(fm);
         MainDetailFragment detailFragment = getDetailFragment(fm);
 
-        if (detailFragment.isReallyHidden()) {
+        if (detailFragment.isExplicitHidden()) {
             final FragmentTransaction transaction = fm.beginTransaction();
-            transaction.show(detailFragment);
-            detailFragment.setIsReallyHidden(false);
+            detailFragment.setExplicitHidden(transaction, false);
             ensureVisibility(transaction, masterFragment, detailFragment);
             transaction.commit();
         }
@@ -61,7 +60,7 @@ public class MailActivity extends AppCompatActivity
     }
 
     private void ensureVisibility(FragmentTransaction transaction, MainListFragment masterFragment, MainDetailFragment detailFragment) {
-        final boolean detailVisible = !detailFragment.isReallyHidden();
+        final boolean detailVisible = !detailFragment.isExplicitHidden();
         if (twoPane) {
             transaction.show(masterFragment); // always visible in two pane mode
         } else if (detailVisible) {
@@ -76,10 +75,10 @@ public class MailActivity extends AppCompatActivity
         MainDetailFragment detailFragment = getDetailFragment(fm);
 
         if (masterFragment.isHidden()) {
-            fm.beginTransaction()
-                    .show(masterFragment)
-                    .hide(detailFragment)
-                    .commit();
+            final FragmentTransaction transaction = fm.beginTransaction();
+            transaction.show(masterFragment);
+            detailFragment.setExplicitHidden(transaction, true);
+            transaction.commit();
         } else {
             super.onBackPressed();
         }
