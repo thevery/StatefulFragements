@@ -2,13 +2,12 @@ package com.yandex.myapplication;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 
-public class MainAccountFragment extends Fragment {
+public class MainAccountFragment extends StatefulFragment {
     private Callbacks mCallbacks;
 
     public MainAccountFragment() {
@@ -39,9 +38,6 @@ public class MainAccountFragment extends Fragment {
     }
 
     public interface Callbacks {
-        /**
-         * Callback for when an item has been selected.
-         */
         void onAccountSelected(String id);
     }
 
@@ -58,8 +54,14 @@ public class MainAccountFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mCallbacks.onAccountSelected("default");
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        mCallbacks.onAccountSelected("default");
+        System.out.println("MainAccountFragment.onActivityCreated");
     }
 }

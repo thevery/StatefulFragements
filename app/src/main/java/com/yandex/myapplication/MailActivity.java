@@ -1,6 +1,7 @@
 package com.yandex.myapplication;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -26,26 +27,60 @@ public class MailActivity extends AppCompatActivity
             final FragmentTransaction transaction = fm.beginTransaction();
 
             transaction.add(R.id.container_1, new MainListFragment(), TAG1);
-            if (twoPane) {
-                transaction.add(R.id.container_2, new MainDetailFragment(), TAG2);
-            }
+
+            final MainDetailFragment mainDetailFragment = new MainDetailFragment();
+            transaction.add(R.id.container_2, mainDetailFragment, TAG2);
+            transaction.hide(mainDetailFragment);
 
             transaction.commit();
         }
     }
 
     @Override
-    public void onItemSelected(String id) {
-        Toast.makeText(this, "MailActivity.onItemSelected: " + id, Toast.LENGTH_SHORT).show();
+    public void onAttachFragment(Fragment fragment) {
+        System.out.println("MailActivity.onAttachFragment: " + fragment);
+        super.onAttachFragment(fragment);
+    }
 
-        final MainDetailFragment fragment = (MainDetailFragment) getSupportFragmentManager().findFragmentByTag(TAG2);
-        fragment.setText("set from activity: " + id);
+    @Override
+    public void onItemSelected(String id) {
+        final FragmentManager fm = getSupportFragmentManager();
+        MainListFragment fragment1 = getFragment1(fm);
+        MainDetailFragment fragment2 = getFragment2(fm);
+        fm.beginTransaction()
+                .show(fragment2)
+                .hide(fragment1)
+                .commit();
+        fragment2.setText("set from activity: " + id);
+    }
+
+    @Override
+    public void onBackPressed() {
+        final FragmentManager fm = getSupportFragmentManager();
+        MainListFragment fragment1 = getFragment1(fm);
+        MainDetailFragment fragment2 = getFragment2(fm);
+        if (fragment1.isHidden()) {
+            fm.beginTransaction()
+                    .show(fragment1)
+                    .hide(fragment2)
+                    .commit();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private MainDetailFragment getFragment2(FragmentManager fm) {
+        return (MainDetailFragment) fm.findFragmentByTag(TAG2);
+    }
+
+    private MainListFragment getFragment1(FragmentManager fm) {
+        return (MainListFragment) fm.findFragmentByTag(TAG1);
     }
 
     @Override
     public void onAccountSelected(String id) {
         final FragmentManager fm = getSupportFragmentManager();
-        final MainListFragment fragment = (MainListFragment) fm.findFragmentByTag(TAG1);
+        final MainListFragment fragment = getFragment1(fm);
         fragment.setAccount(id);
     }
 }
