@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
  */
 public class StatefulFragment extends Fragment {
     public static final String HIDDEN = "hidden";
+    private boolean isReallyHidden = false;
 
     @Override
     public void onSaveInstanceState(Bundle bundle) {
@@ -18,10 +19,25 @@ public class StatefulFragment extends Fragment {
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        isReallyHidden = hidden;
+    }
+
+    public boolean isReallyHidden() {
+        return isReallyHidden;
+    }
+
+    public void setIsReallyHidden(boolean isReallyHidden) {
+        this.isReallyHidden = isReallyHidden;
+    }
+
+    @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         if (bundle != null) {
-            if (bundle.getBoolean(HIDDEN, false)) {
+            isReallyHidden = bundle.getBoolean(HIDDEN, false);
+            if (isReallyHidden) {
                 getFragmentManager()
                         .beginTransaction()
                         .hide(this)
